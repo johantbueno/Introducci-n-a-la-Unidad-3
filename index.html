@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad 3: Visualización de Datos en Power BI - Johan Tapia PhD.</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-blue: #004aad;
+            --accent-gold: #ffd166;
+            --light-bg: #f8f9fa;
+            --dark-text: #212529;
+            --success-green: #28a745;
+            --error-red: #dc3545;
+            --purple: #6f42c1;
+            --teal: #20c997;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            scroll-behavior: smooth;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #0066cc 100%);
+            box-shadow: 0 4px 12px rgba(0, 74, 173, 0.15);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .navbar-nav .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 6px 20px rgba(0, 74, 173, 0.25);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #0066cc 100%);
+            color: white;
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,128C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .hero .author-info {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .linkedin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .linkedin-badge:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .btn-hero {
+            background: var(--accent-gold);
+            color: var(--primary-blue);
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4);
+        }
+        
+        .btn-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 209, 102, 0.6);
+            background: #ffdb7d;
+            color: var(--primary-blue);
+        }
+        
+        /* Section Styling */
+        section {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 74, 173, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover .card-icon {
+            transform: scale(1.1);
+            color: var(--accent-gold);
+        }
+        
+        .card-title {
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+        
+        /* Chart Type Cards */
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 74, 173, 0.15);
+        }
+        
+        .chart-preview {
+            width: 100%;
+            height: 200px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-icon-large {
+            font-size: 4rem;
+            color: var(--primary-blue);
+            opacity: 0.3;
+        }
+        
+        /* Visual Chart Examples with CSS */
+        .chart-example {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 1rem;
+        }
+        
+        .bar {
+            width: 15%;
+            background: linear-gradient(180deg, var(--primary-blue), var(--accent-gold));
+            border-radius: 5px 5px 0 0;
+            animation: growUp 1s ease;
+        }
+        
+        @keyframes growUp {
+            from { height: 0; }
+            to { height: var(--bar-height); }
+        }
+        
+        .line-chart {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .line-path {
+            stroke: var(--primary-blue);
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 500;
+            stroke-dashoffset: 500;
+            animation: drawLine 2s ease forwards;
+        }
+        
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        .pie-chart {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--primary-blue) 0% 35%,
+                var(--accent-gold) 35% 60%,
+                var(--teal) 60% 85%,
+                var(--purple) 85% 100%
+            );
+            animation: rotateIn 1s ease;
+        }
+        
+        @keyframes rotateIn {
+            from { transform: rotate(0deg) scale(0); }
+            to { transform: rotate(360deg) scale(1); }
+        }
+        
+        /* Use Case Grid */
+        .use-case {
+            background: white;
+            border-left: 4px solid var(--primary-blue);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .use-case:hover {
+            transform: translateX(5px);
+            border-left-color: var(--accent-gold);
+        }
+        
+        .use-case-title {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Best Practices Section */
+        .practice-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-left: 4px solid var(--success-green);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .practice-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--success-green);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+        }
+        
+        /* Interactive Demo Section */
+        .demo-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .chart-selector {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary-blue);
+            background: white;
+            color: var(--primary-blue);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .chart-btn:hover, .chart-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 74, 173, 0.3);
+        }
+        
+        .demo-chart {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        /* Callouts */
+        .callout {
+            border-left: 4px solid var(--primary-blue);
+            background: #f0f7ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .callout-success {
+            border-left-color: var(--success-green);
+            background: #f0fff4;
+        }
+        
+        .callout-warning {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+        
+        .callout-info {
+            border-left-color: var(--teal);
+            background: #f0fffe;
+        }
+        
+        .callout-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        /* Quiz Section */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .question-card.correct {
+            border: 3px solid var(--success-green);
+            background: #f0fff4;
+        }
+        
+        .question-card.incorrect {
+            border: 3px solid var(--error-red);
+            background: #fff5f5;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: var(--primary-blue);
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+        
+        .option.correct {
+            background: var(--success-green);
+            color: white;
+            border-color: var(--success-green);
+        }
+        
+        .option.incorrect {
+            background: var(--error-red);
+            color: white;
+            border-color: var(--error-red);
+        }
+        
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .quiz-score {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #0066cc 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 74, 173, 0.2);
+        }
+        
+        .btn-quiz {
+            background: var(--accent-gold);
+            color: var(--primary-blue);
+            border: none;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .btn-quiz:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 209, 102, 0.4);
+            background: #ffdb7d;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #0066cc 100%);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+        
+        footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: #ffdb7d;
+            text-decoration: underline;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 74, 173, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            background: #0066cc;
+        }
+        
+        .back-to-top.show {
+            display: flex;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .hero .author-info {
+                flex-direction: column;
+            }
+            
+            .chart-selector {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="bi bi-graph-up-arrow me-2"></i>Power BI Academy
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#objetivos">Objetivos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#conceptos">Conceptos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tipos">Tipos de Gráficos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#mejores-practicas">Mejores Prácticas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#demo">Demo Interactiva</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#autoevaluacion">Autoevaluación</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1 class="display-3 fw-bold">Unidad 3: Visualización de Datos en Power BI</h1>
+                <p class="subtitle">Aprende a contar historias convincentes con tus datos mediante visualizaciones efectivas</p>
+                <div class="author-info">
+                    <span><strong>Instructor:</strong> Johan Tapia PhD.</span>
+                    <a href="https://www.linkedin.com/in/johan-tapia-192183281/" target="_blank" class="linkedin-badge">
+                        <i class="bi bi-linkedin"></i>
+                        Conectar en LinkedIn
+                    </a>
+                </div>
+                <button class="btn btn-hero" onclick="document.getElementById('objetivos').scrollIntoView({behavior: 'smooth'})">
+                    <i class="bi bi-bar-chart-fill me-2"></i>Explorar Visualizaciones
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Objetivos -->
+    <section id="objetivos" class="bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Objetivos de Aprendizaje</h2>
+                <p class="text-muted mt-3">Al finalizar esta unidad, dominarás:</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="card p-4">
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Definir</strong> los conceptos fundamentales de visualización de datos y su importancia en la comunicación efectiva
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Identificar</strong> los tipos de gráficos disponibles en Power BI y sus casos de uso específicos
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Elegir</strong> la visualización más adecuada según el tipo de datos y el mensaje que deseas comunicar
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Aplicar</strong> principios de diseño visual para crear dashboards claros, informativos y estéticamente atractivos
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Personalizar</strong> visualizaciones usando formatos, colores, etiquetas y elementos interactivos
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conceptos Básicos -->
+    <section id="conceptos">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">¿Qué es la Visualización de Datos?</h2>
+                <p class="text-muted mt-3">Los fundamentos que debes conocer</p>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-lg-6 mb-4">
+                    <div class="card p-4 h-100">
+                        <h4 class="text-primary mb-3"><i class="bi bi-lightbulb-fill me-2"></i>Definición</h4>
+                        <p>La <strong>visualización de datos</strong> es el proceso de representar información de forma gráfica para comunicar ideas, patrones y tendencias de manera clara, rápida y efectiva.</p>
+                        <p>Transforma datos complejos en representaciones visuales que el cerebro humano puede procesar de forma intuitiva, permitiendo tomar decisiones informadas basadas en evidencia.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card p-4 h-100">
+                        <h4 class="text-primary mb-3"><i class="bi bi-bullseye me-2"></i>Objetivo Principal</h4>
+                        <ul class="mb-0">
+                            <li>Facilitar la comprensión de grandes volúmenes de datos</li>
+                            <li>Identificar tendencias, patrones y anomalías rápidamente</li>
+                            <li>Comunicar insights de forma efectiva a diferentes audiencias</li>
+                            <li>Apoyar la toma de decisiones basada en datos</li>
+                            <li>Contar historias convincentes con datos (Data Storytelling)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout callout-info">
+                <i class="bi bi-info-circle-fill callout-icon"></i>
+                <strong>¿Por qué es importante?</strong> El cerebro humano procesa imágenes 60,000 veces más rápido que texto. Una visualización bien diseñada puede revelar insights que permanecerían ocultos en tablas de datos sin procesar.
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="chart-card text-center">
+                        <div class="card-icon">
+                            <i class="bi bi-eye-fill"></i>
+                        </div>
+                        <h5 class="card-title">Claridad</h5>
+                        <p>Información compleja presentada de forma simple y comprensible</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="chart-card text-center">
+                        <div class="card-icon">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </div>
+                        <h5 class="card-title">Rapidez</h5>
+                        <p>Identificación instantánea de patrones y tendencias clave</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="chart-card text-center">
+                        <div class="card-icon">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <h5 class="card-title">Comunicación</h5>
+                        <p>Transmisión efectiva de insights a cualquier audiencia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tipos de Gráficos -->
+    <section id="tipos" class="bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Tipos de Visualizaciones en Power BI</h2>
+                <p class="text-muted mt-3">Explora las opciones y aprende cuándo usar cada una</p>
+            </div>
+
+            <!-- Gráficos de Barras -->
+            <div class="row mb-5">
+                <div class="col-lg-5 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <div class="chart-example">
+                                <div class="bar" style="--bar-height: 60%;"></div>
+                                <div class="bar" style="--bar-height: 85%;"></div>
+                                <div class="bar" style="--bar-height: 45%;"></div>
+                                <div class="bar" style="--bar-height: 95%;"></div>
+                                <div class="bar" style="--bar-height: 70%;"></div>
+                            </div>
+                        </div>
+                        <h4 class="text-primary mb-3">
+                            <i class="bi bi-bar-chart-fill me-2"></i>Gráfico de Barras
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-lg-7 mb-4">
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-check2-circle me-2"></i>Cuándo Usar</div>
+                        <p>Ideal para comparar valores entre diferentes categorías. Perfecto cuando tienes pocos elementos a comparar (3-10).</p>
+                    </div>
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-lightbulb me-2"></i>Ejemplos de Uso</div>
+                        <ul class="mb-0">
+                            <li>Ventas por región geográfica</li>
+                            <li>Ingresos por línea de producto</li>
+                            <li>Cantidad de empleados por departamento</li>
+                            <li>Comparación de presupuesto vs. gasto real</li>
+                        </ul>
+                    </div>
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-star me-2"></i>Mejores Prácticas</div>
+                        <ul class="mb-0">
+                            <li>Ordena las barras por valor (ascendente o descendente)</li>
+                            <li>Usa colores consistentes o destaca valores importantes</li>
+                            <li>Incluye etiquetas de datos para mayor precisión</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos de Líneas -->
+            <div class="row mb-5">
+                <div class="col-lg-5 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <svg class="line-chart" viewBox="0 0 200 100">
+                                <polyline class="line-path" points="10,80 50,60 90,45 130,55 170,30" />
+                                <circle cx="10" cy="80" r="3" fill="var(--primary-blue)"/>
+                                <circle cx="50" cy="60" r="3" fill="var(--primary-blue)"/>
+                                <circle cx="90" cy="45" r="3" fill="var(--primary-blue)"/>
+                                <circle cx="130" cy="55" r="3" fill="var(--primary-blue)"/>
+                                <circle cx="170" cy="30" r="3" fill="var(--primary-blue)"/>
+                            </svg>
+                        </div>
+                        <h4 class="text-primary mb-3">
+                            <i class="bi bi-graph-up me-2"></i>Gráfico de Líneas
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-lg-7 mb-4">
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-check2-circle me-2"></i>Cuándo Usar</div>
+                        <p>Perfecto para mostrar tendencias a lo largo del tiempo. Excelente para visualizar series temporales y evolución de métricas.</p>
+                    </div>
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-lightbulb me-2"></i>Ejemplos de Uso</div>
+                        <ul class="mb-0">
+                            <li>Evolución de ventas mensuales/anuales</li>
+                            <li>Tendencia del precio de acciones</li>
+                            <li>Tráfico web por día/semana/mes</li>
+                            <li>Crecimiento de usuarios activos en el tiempo</li>
+                        </ul>
+                    </div>
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-star me-2"></i>Mejores Prácticas</div>
+                        <ul class="mb-0">
+                            <li>Mantén el eje Y comenzando en cero para evitar distorsiones</li>
+                            <li>Usa múltiples líneas para comparar series (máximo 5)</li>
+                            <li>Agrega marcadores en puntos clave o cambios significativos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos Circulares -->
+            <div class="row mb-5">
+                <div class="col-lg-5 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <div class="pie-chart"></div>
+                        </div>
+                        <h4 class="text-primary mb-3">
+                            <i class="bi bi-pie-chart-fill me-2"></i>Gráfico Circular (Pie Chart)
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-lg-7 mb-4">
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-check2-circle me-2"></i>Cuándo Usar</div>
+                        <p>Útil para mostrar proporciones y porcentajes de un todo. Mejor con 3-6 categorías máximo.</p>
+                    </div>
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-lightbulb me-2"></i>Ejemplos de Uso</div>
+                        <ul class="mb-0">
+                            <li>Distribución de market share por competidor</li>
+                            <li>Porcentaje de ventas por categoría de producto</li>
+                            <li>Composición del presupuesto por área</li>
+                            <li>Distribución demográfica de clientes</li>
+                        </ul>
+                    </div>
+                    <div class="use-case">
+                        <div class="use-case-title"><i class="bi bi-star me-2"></i>Mejores Prácticas</div>
+                        <ul class="mb-0">
+                            <li>Limita a 5-6 segmentos máximo (usa "Otros" para agrupar)</li>
+                            <li>Ordena segmentos de mayor a menor</li>
+                            <li>Incluye porcentajes en las etiquetas</li>
+                            <li>Considera usar gráfico de barras si hay muchas categorías</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Más tipos de gráficos -->
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <i class="bi bi-scatter chart-icon-large"></i>
+                        </div>
+                        <h5 class="text-primary mb-3">Gráfico de Dispersión</h5>
+                        <p><strong>Uso:</strong> Mostrar correlación entre dos variables numéricas.</p>
+                        <p><strong>Ejemplo:</strong> Relación entre inversión en marketing y ventas, correlación precio-demanda.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <i class="bi bi-grid-3x3-gap-fill chart-icon-large"></i>
+                        </div>
+                        <h5 class="text-primary mb-3">Mapa de Calor</h5>
+                        <p><strong>Uso:</strong> Visualizar patrones en matrices de datos usando colores.</p>
+                        <p><strong>Ejemplo:</strong> Ventas por día de la semana y hora, desempeño de productos por región y trimestre.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <i class="bi bi-geo-alt-fill chart-icon-large"></i>
+                        </div>
+                        <h5 class="text-primary mb-3">Mapa Geográfico</h5>
+                        <p><strong>Uso:</strong> Mostrar datos relacionados con ubicaciones geográficas.</p>
+                        <p><strong>Ejemplo:</strong> Ventas por país/región, distribución de tiendas, densidad de clientes por área.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <i class="bi bi-funnel-fill chart-icon-large"></i>
+                        </div>
+                        <h5 class="text-primary mb-3">Gráfico de Embudo</h5>
+                        <p><strong>Uso:</strong> Visualizar procesos secuenciales con reducción progresiva.</p>
+                        <p><strong>Ejemplo:</strong> Embudo de ventas (leads → prospects → clientes), conversión en e-commerce.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <i class="bi bi-speedometer2 chart-icon-large"></i>
+                        </div>
+                        <h5 class="text-primary mb-3">Medidor (Gauge)</h5>
+                        <p><strong>Uso:</strong> Mostrar progreso hacia un objetivo o KPI único.</p>
+                        <p><strong>Ejemplo:</strong> Porcentaje de cuota de ventas alcanzada, satisfacción del cliente vs. objetivo.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-preview">
+                            <i class="bi bi-card-text chart-icon-large"></i>
+                        </div>
+                        <h5 class="text-primary mb-3">Tarjeta (Card)</h5>
+                        <p><strong>Uso:</strong> Destacar un valor único o KPI importante.</p>
+                        <p><strong>Ejemplo:</strong> Total de ventas del mes, número de clientes activos, ingreso promedio por usuario.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout callout-warning mt-4">
+                <i class="bi bi-exclamation-triangle-fill callout-icon"></i>
+                <strong>Evita estos errores comunes:</strong> No uses gráficos 3D (distorsionan la percepción), evita demasiados colores (máximo 5-7), nunca omitas el eje Y en gráficos de barras/líneas, y no uses gráficos circulares con más de 6 segmentos.
+            </div>
+        </div>
+    </section>
+
+    <!-- Mejores Prácticas -->
+    <section id="mejores-practicas">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Mejores Prácticas de Visualización</h2>
+                <p class="text-muted mt-3">Principios para crear dashboards efectivos y profesionales</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">1</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Conoce a tu Audiencia</h5>
+                                <p>Diseña visualizaciones adaptadas al nivel de conocimiento y necesidades de quien las verá. Un CEO requiere vistas ejecutivas de alto nivel, mientras que un analista necesita mayor detalle.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">2</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Simplicidad Ante Todo</h5>
+                                <p>Elimina elementos innecesarios (chartjunk). Cada elemento visual debe tener un propósito. Pregúntate: "¿Esto ayuda a comprender los datos o solo distrae?"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">3</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Usa Color Estratégicamente</h5>
+                                <p>El color debe comunicar, no solo decorar. Usa colores consistentes para categorías similares, destaca lo importante con colores contrastantes, y considera la accesibilidad (daltonismo).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">4</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Jerarquía Visual Clara</h5>
+                                <p>Organiza elementos por importancia. Los KPIs principales deben verse primero (esquina superior izquierda), seguidos de visualizaciones de soporte. Usa tamaño y posición estratégicamente.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">5</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Títulos y Etiquetas Descriptivas</h5>
+                                <p>Cada visualización debe explicarse por sí misma. Usa títulos claros que indiquen exactamente qué se está mostrando. Incluye unidades de medida y contexto temporal.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">6</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Proporciona Contexto</h5>
+                                <p>Los números sin contexto no significan nada. Agrega comparaciones (vs. período anterior, vs. objetivo), líneas de referencia, y benchmarks para dar perspectiva.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">7</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Diseño Responsivo</h5>
+                                <p>Asegura que tus dashboards se vean bien en diferentes dispositivos (escritorio, tablet, móvil). Power BI permite crear vistas específicas para móviles.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="practice-card">
+                        <div class="d-flex align-items-start">
+                            <span class="practice-number">8</span>
+                            <div>
+                                <h5 class="text-primary mb-2">Interactividad Intencional</h5>
+                                <p>Usa filtros, segmentadores y drill-through para permitir exploración, pero no sobrecargues. La interactividad debe facilitar el descubrimiento, no confundir.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                    <div class="callout callout-success">
+                        <h5><i class="bi bi-check-circle-fill callout-icon"></i>Haz Esto</h5>
+                        <ul>
+                            <li>Usa espacio en blanco para respirar</li>
+                            <li>Alinea elementos consistentemente</li>
+                            <li>Mantén paleta de colores corporativa</li>
+                            <li>Agrupa visualizaciones relacionadas</li>
+                            <li>Prueba con usuarios reales antes de publicar</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="callout callout-warning">
+                        <h5><i class="bi bi-x-circle-fill callout-icon"></i>Evita Esto</h5>
+                        <ul>
+                            <li>Más de 7-8 visualizaciones por página</li>
+                            <li>Gráficos 3D y efectos innecesarios</li>
+                            <li>Fuentes menores a 10pt (legibilidad)</li>
+                            <li>Colores que no cumplan con contraste WCAG</li>
+                            <li>Ejes Y que no comiencen en cero (distorsión)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Interactiva -->
+    <section id="demo" class="bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Demo Interactiva: Selector de Visualización</h2>
+                <p class="text-muted mt-3">Explora cómo diferentes gráficos representan los mismos datos</p>
+            </div>
+
+            <div class="demo-container">
+                <p class="lead mb-4">Imagina que tienes datos de ventas trimestrales por categoría de producto. Selecciona un tipo de gráfico para ver cómo se visualiza:</p>
+                
+                <div class="chart-selector">
+                    <button class="chart-btn active" onclick="showChart('bar')">
+                        <i class="bi bi-bar-chart-fill me-2"></i>Barras
+                    </button>
+                    <button class="chart-btn" onclick="showChart('line')">
+                        <i class="bi bi-graph-up me-2"></i>Líneas
+                    </button>
+                    <button class="chart-btn" onclick="showChart('pie')">
+                        <i class="bi bi-pie-chart-fill me-2"></i>Circular
+                    </button>
+                    <button class="chart-btn" onclick="showChart('area')">
+                        <i class="bi bi-graph-up-arrow me-2"></i>Área
+                    </button>
+                </div>
+
+                <div class="demo-chart" id="demoChart">
+                    <canvas id="myChart" width="400" height="250"></canvas>
+                </div>
+
+                <div class="mt-4">
+                    <div class="callout" id="chartRecommendation">
+                        <i class="bi bi-lightbulb-fill callout-icon"></i>
+                        <strong>Recomendación:</strong> <span id="recommendationText">El gráfico de barras es ideal para comparar valores entre categorías. Perfecto para ver qué categoría vendió más.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="card p-4">
+                        <h4 class="text-primary mb-4"><i class="bi bi-tools me-2"></i>Personalización en Power BI</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="text-primary mb-3">Opciones de Formato</h5>
+                                <ul>
+                                    <li><strong>Título:</strong> Personaliza texto, tamaño, color y alineación</li>
+                                    <li><strong>Colores de datos:</strong> Aplica paletas predefinidas o colores personalizados</li>
+                                    <li><strong>Etiquetas de datos:</strong> Muestra valores, porcentajes o ambos</li>
+                                    <li><strong>Leyenda:</strong> Posiciona y formatea la leyenda</li>
+                                    <li><strong>Ejes:</strong> Ajusta escala, título y formato de números</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="text-primary mb-3">Características Interactivas</h5>
+                                <ul>
+                                    <li><strong>Tooltips:</strong> Información adicional al pasar el mouse</li>
+                                    <li><strong>Drill-down:</strong> Navega a niveles de detalle inferiores</li>
+                                    <li><strong>Filtros cruzados:</strong> Selecciona un elemento para filtrar otros gráficos</li>
+                                    <li><strong>Segmentadores:</strong> Filtros visuales para toda la página</li>
+                                    <li><strong>Marcadores:</strong> Guarda vistas específicas del reporte</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Actividad Práctica -->
+    <section id="actividad">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Actividad Práctica</h2>
+                <p class="text-muted mt-3">Aplica lo aprendido con un ejercicio real</p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card p-4">
+                        <h4 class="text-primary mb-4">
+                            <i class="bi bi-clipboard-check me-2"></i>Crea tu Dashboard de Visualización
+                        </h4>
+
+                        <div class="callout callout-info mb-4">
+                            <i class="bi bi-download callout-icon"></i>
+                            <strong>Dataset recomendado:</strong> Descarga el dataset "Sample Superstore" de Tableau Public o usa los datos de muestra de Power BI Desktop.
+                        </div>
+
+                        <h5 class="text-primary mb-3">Paso a Paso:</h5>
+                        <ol class="lead">
+                            <li class="mb-3">
+                                <strong>Conecta los datos:</strong> Abre Power BI Desktop e importa el dataset (Excel, CSV o base de datos)
+                            </li>
+                            <li class="mb-3">
+                                <strong>Crea una página de resumen:</strong> Agrega 3-4 tarjetas (Cards) mostrando KPIs principales:
+                                <ul>
+                                    <li>Total de ventas</li>
+                                    <li>Total de órdenes</li>
+                                    <li>Beneficio total</li>
+                                    <li>Promedio de ventas por orden</li>
+                                </ul>
+                            </li>
+                            <li class="mb-3">
+                                <strong>Gráfico de barras:</strong> Ventas por categoría de producto (barras verticales ordenadas de mayor a menor)
+                            </li>
+                            <li class="mb-3">
+                                <strong>Gráfico de líneas:</strong> Evolución de ventas mensuales a lo largo del tiempo
+                            </li>
+                            <li class="mb-3">
+                                <strong>Gráfico circular:</strong> Distribución de ventas por región (máximo 5 regiones)
+                            </li>
+                            <li class="mb-3">
+                                <strong>Mapa geográfico:</strong> Ventas por estado o país (si los datos incluyen ubicación)
+                            </li>
+                            <li class="mb-3">
+                                <strong>Personaliza el formato:</strong>
+                                <ul>
+                                    <li>Aplica títulos descriptivos a cada visual</li>
+                                    <li>Usa una paleta de colores consistente (3-4 colores máximo)</li>
+                                    <li>Agrega etiquetas de datos en gráficos clave</li>
+                                    <li>Ajusta tamaños de fuente para legibilidad</li>
+                                </ul>
+                            </li>
+                            <li class="mb-3">
+                                <strong>Agrega interactividad:</strong> Inserta 2-3 segmentadores (slicers) para filtrar por:
+                                <ul>
+                                    <li>Rango de fechas</li>
+                                    <li>Categoría de producto</li>
+                                    <li>Región</li>
+                                </ul>
+                            </li>
+                            <li class="mb-3">
+                                <strong>Verifica la usabilidad:</strong> Haz clic en diferentes elementos y asegúrate de que los filtros cruzados funcionen correctamente
+                            </li>
+                            <li class="mb-3">
+                                <strong>Publica y comparte:</strong> Guarda tu trabajo y publícalo en Power BI Service
+                            </li>
+                        </ol>
+
+                        <div class="callout callout-success mt-4">
+                            <i class="bi bi-trophy-fill callout-icon"></i>
+                            <strong>¡Desafío adicional!</strong> Crea una segunda página con un análisis de rentabilidad por subcategoría usando un gráfico de barras apiladas y un gráfico de dispersión que muestre la relación entre ventas y beneficio.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Autoevaluación -->
+    <section id="autoevaluacion" class="bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Autoevaluación</h2>
+                <p class="text-muted mt-3">Evalúa tu comprensión de visualización de datos</p>
+            </div>
+            
+            <div class="quiz-container">
+                <div id="quiz">
+                    <!-- Las preguntas se generan dinámicamente con JavaScript -->
+                </div>
+                <div id="quiz-result" style="display: none;"></div>
+                <div class="text-center mt-4">
+                    <button id="submit-quiz" class="btn btn-quiz btn-lg">
+                        <i class="bi bi-check-circle me-2"></i>Verificar Respuestas
+                    </button>
+                    <button id="restart-quiz" class="btn btn-quiz btn-lg" style="display: none;">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Reiniciar Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h5>Unidad 3: Visualización de Datos en Power BI</h5>
+                    <p class="mb-2">Curso de Business Intelligence y Análisis de Datos</p>
+                    <p><strong>Instructor:</strong> Johan Tapia PhD.</p>
+                    <a href="https://www.linkedin.com/in/johan-tapia-192183281/" target="_blank" class="linkedin-badge">
+                        <i class="bi bi-linkedin"></i>
+                        Conectar en LinkedIn
+                    </a>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Enlaces Útiles</h5>
+                    <p>
+                        <a href="#home">Volver arriba</a><br>
+                        <a href="https://powerbi.microsoft.com" target="_blank">Power BI Official</a><br>
+                        <a href="https://learn.microsoft.com/power-bi/visuals" target="_blank">Visualizaciones Power BI</a>
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.3);">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Johan Tapia PhD. - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="bi bi-arrow-up"></i>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js for Demo -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <script>
+        // ============================================
+        // DEMO CHART - Interactive Visualization
+        // ============================================
+        
+        const salesData = {
+            labels: ['Electrónica', 'Ropa', 'Hogar', 'Deportes', 'Juguetes'],
+            values: [45000, 32000, 28000, 19000, 15000],
+            colors: ['#004aad', '#ffd166', '#20c997', '#6f42c1', '#fd7e14']
+        };
+
+        let currentChart = null;
+
+        const recommendations = {
+            bar: 'El gráfico de barras es ideal para comparar valores entre categorías. Perfecto para ver qué categoría vendió más.',
+            line: 'El gráfico de líneas sería mejor para datos temporales. Para categorías, considera usar barras.',
+            pie: 'El gráfico circular muestra proporciones del total. Útil para ver la distribución porcentual de ventas.',
+            area: 'El gráfico de área es mejor para mostrar evolución temporal acumulada. Para categorías, las barras son más claras.'
+        };
+
+        function showChart(type) {
+            // Update button states
+            document.querySelectorAll('.chart-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.chart-btn').classList.add('active');
+
+            // Update recommendation
+            document.getElementById('recommendationText').textContent = recommendations[type];
+
+            // Destroy previous chart
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            const ctx = document.getElementById('myChart').getContext('2d');
+
+            const chartConfig = {
+                bar: {
+                    type: 'bar',
+                    data: {
+                        labels: salesData.labels,
+                        datasets: [{
+                            label: 'Ventas ($)',
+                            data: salesData.values,
+                            backgroundColor: salesData.colors,
+                            borderColor: salesData.colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Ventas por Categoría de Producto', font: { size: 16 } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { callback: value => '$' + value.toLocaleString() } }
+                        }
+                    }
+                },
+                line: {
+                    type: 'line',
+                    data: {
+                        labels: salesData.labels,
+                        datasets: [{
+                            label: 'Ventas ($)',
+                            data: salesData.values,
+                            borderColor: '#004aad',
+                            backgroundColor: 'rgba(0, 74, 173, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Tendencia de Ventas', font: { size: 16 } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { callback: value => '$' + value.toLocaleString() } }
+                        }
+                    }
+                },
+                pie: {
+                    type: 'pie',
+                    data: {
+                        labels: salesData.labels,
+                        datasets: [{
+                            data: salesData.values,
+                            backgroundColor: salesData.colors,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: 'Distribución de Ventas por Categoría', font: { size: 16 } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                        return context.label + ': $' + context.parsed.toLocaleString() + ' (' + percentage + '%)';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                area: {
+                    type: 'line',
+                    data: {
+                        labels: salesData.labels,
+                        datasets: [{
+                            label: 'Ventas ($)',
+                            data: salesData.values,
+                            borderColor: '#20c997',
+                            backgroundColor: 'rgba(32, 201, 151, 0.3)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Área de Ventas', font: { size: 16 } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { callback: value => '$' + value.toLocaleString() } }
+                        }
+                    }
+                }
+            };
+
+            currentChart = new Chart(ctx, chartConfig[type]);
+        }
+
+        // Initialize with bar chart
+        document.addEventListener('DOMContentLoaded', function() {
+            showChart('bar');
+        });
+
+        // ============================================
+        // QUIZ FUNCTIONALITY
+        // ============================================
+        
+        const quizData = [
+            {
+                question: "¿Cuál es el tipo de gráfico más adecuado para mostrar tendencias a lo largo del tiempo?",
+                options: [
+                    "Gráfico circular (pie chart)",
+                    "Gráfico de barras",
+                    "Gráfico de líneas",
+                    "Gráfico de dispersión"
+                ],
+                correct: 2
+            },
+            {
+                question: "¿Cuántas categorías como máximo se recomienda mostrar en un gráfico circular?",
+                options: [
+                    "3-4 categorías",
+                    "5-6 categorías",
+                    "10-12 categorías",
+                    "Sin límite específico"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Qué tipo de visualización es ideal para mostrar la correlación entre dos variables numéricas?",
+                options: [
+                    "Gráfico de barras apiladas",
+                    "Gráfico de dispersión (scatter plot)",
+                    "Gráfico de líneas múltiples",
+                    "Gráfico de embudo"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Cuál de estas NO es una buena práctica de visualización de datos?",
+                options: [
+                    "Usar colores consistentes para categorías similares",
+                    "Agregar gráficos 3D para mayor impacto visual",
+                    "Incluir títulos descriptivos en cada visualización",
+                    "Proporcionar contexto con líneas de referencia"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Qué característica de Power BI permite explorar niveles de detalle más profundos en una visualización?",
+                options: [
+                    "Filtros cruzados",
+                    "Segmentadores (slicers)",
+                    "Drill-down",
+                    "Tooltips personalizados"
+                ],
+                correct: 2
+            },
+            {
+                question: "Para mostrar el progreso hacia un objetivo único (como cuota de ventas alcanzada), ¿qué visualización es más efectiva?",
+                options: [
+                    "Gráfico de barras",
+                    "Medidor (Gauge)",
+                    "Gráfico de líneas",
+                    "Tarjeta (Card)"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es el principio fundamental detrás de una visualización efectiva?",
+                options: [
+                    "Usar tantos colores como sea posible",
+                    "Maximizar la cantidad de datos mostrados",
+                    "Comunicar información de forma clara y concisa",
+                    "Incluir efectos visuales avanzados"
+                ],
+                correct: 2
+            }
+        ];
+
+        let userAnswers = [];
+        let quizSubmitted = false;
+
+        function renderQuiz() {
+            const quizContainer = document.getElementById('quiz');
+            quizContainer.innerHTML = '';
+            userAnswers = [];
+            quizSubmitted = false;
+
+            quizData.forEach((question, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `question-${qIndex}`;
+
+                let questionHTML = `
+                    <div class="question-text">
+                        <span class="badge bg-primary me-2">Pregunta ${qIndex + 1}</span>
+                        ${question.question}
+                    </div>
+                `;
+
+                question.options.forEach((option, oIndex) => {
+                    questionHTML += `
+                        <div class="option" data-question="${qIndex}" data-option="${oIndex}">
+                            <i class="bi bi-circle me-2"></i>
+                            ${option}
+                        </div>
+                    `;
+                });
+
+                questionCard.innerHTML = questionHTML;
+                quizContainer.appendChild(questionCard);
+            });
+
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', handleOptionClick);
+            });
+        }
+
+        function handleOptionClick(e) {
+            if (quizSubmitted) return;
+
+            const questionIndex = parseInt(e.currentTarget.dataset.question);
+            const optionIndex = parseInt(e.currentTarget.dataset.option);
+
+            document.querySelectorAll(`.option[data-question="${questionIndex}"]`).forEach(opt => {
+                opt.classList.remove('selected');
+                opt.querySelector('i').className = 'bi bi-circle me-2';
+            });
+
+            e.currentTarget.classList.add('selected');
+            e.currentTarget.querySelector('i').className = 'bi bi-check-circle-fill me-2';
+
+            userAnswers[questionIndex] = optionIndex;
+        }
+
+        function checkAnswers() {
+            if (userAnswers.length !== quizData.length) {
+                alert('Por favor, responde todas las preguntas antes de verificar.');
+                return;
+            }
+
+            quizSubmitted = true;
+            let correctCount = 0;
+
+            quizData.forEach((question, qIndex) => {
+                const questionCard = document.getElementById(`question-${qIndex}`);
+                const options = questionCard.querySelectorAll('.option');
+                const userAnswer = userAnswers[qIndex];
+                const correctAnswer = question.correct;
+
+                options.forEach(opt => opt.classList.add('disabled'));
+
+                options[correctAnswer].classList.add('correct');
+                options[correctAnswer].querySelector('i').className = 'bi bi-check-circle-fill me-2';
+
+                if (userAnswer !== correctAnswer) {
+                    options[userAnswer].classList.add('incorrect');
+                    options[userAnswer].querySelector('i').className = 'bi bi-x-circle-fill me-2';
+                    questionCard.classList.add('incorrect');
+                } else {
+                    correctCount++;
+                    questionCard.classList.add('correct');
+                }
+            });
+
+            const percentage = (correctCount / quizData.length) * 100;
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.style.display = 'block';
+            
+            let message = '';
+            let emoji = '';
+            if (percentage === 100) {
+                message = '¡Perfecto! Dominas los conceptos de visualización de datos';
+                emoji = '🏆';
+            } else if (percentage >= 80) {
+                message = '¡Excelente trabajo! Tienes un gran conocimiento';
+                emoji = '🌟';
+            } else if (percentage >= 60) {
+                message = 'Buen intento. Revisa algunos conceptos clave';
+                emoji = '👍';
+            } else {
+                message = 'Necesitas repasar el contenido de visualización';
+                emoji = '📚';
+            }
+
+            resultDiv.innerHTML = `
+                <div class="quiz-score">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">${emoji}</div>
+                    <div>Puntaje: ${correctCount} de ${quizData.length} (${percentage.toFixed(0)}%)</div>
+                    <div style="font-size: 1.2rem; margin-top: 1rem; opacity: 0.9;">${message}</div>
+                </div>
+            `;
+
+            document.getElementById('submit-quiz').style.display = 'none';
+            document.getElementById('restart-quiz').style.display = 'inline-block';
+
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function restartQuiz() {
+            renderQuiz();
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('submit-quiz').style.display = 'inline-block';
+            document.getElementById('restart-quiz').style.display = 'none';
+            document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('submit-quiz').addEventListener('click', checkAnswers);
+        document.getElementById('restart-quiz').addEventListener('click', restartQuiz);
+
+        // ============================================
+        // NAVBAR SCROLL EFFECT
+        // ============================================
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ============================================
+        // BACK TO TOP BUTTON
+        // ============================================
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ============================================
+        // SMOOTH SCROLL FOR ANCHOR LINKS
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    const navbarCollapse = document.querySelector('.navbar-collapse');
+                    if (navbarCollapse.classList.contains('show')) {
+                        navbarCollapse.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        // ============================================
+        // FADE IN ANIMATION ON SCROLL
+        // ============================================
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .chart-card, .use-case, .practice-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderQuiz();
+        });
+    </script>
+</body>
+</html>
